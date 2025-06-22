@@ -36,7 +36,7 @@ config = DPOConfig(
     loss_type="sdpo",
     sdpo_threshold=0.6,
     # Use a larger model as reference for better token importance scoring
-    ref_model_name_or_path="microsoft/DialoGPT-large",  # e.g., large model as ref for medium policy
+    ref_model_name_or_path="./models/model_33b-dpo-baseline",  # e.g., large model as ref for medium policy
 )
 ```
 
@@ -72,31 +72,51 @@ from trl import DPOConfig, DPOTrainer
 config = DPOConfig(
     loss_type="sdpo",           # Use SDPO loss
     sdpo_threshold=0.6,         # Keep top 60% of important tokens
-    ref_model_name_or_path="microsoft/DialoGPT-large",  # Optional: specify reference model
+    ref_model_name_or_path="./models/model_33b-dpo-baseline",  # Optional: specify reference model
     # ... other DPO config options
 )
 ```
 
 ### Usage Example
 
+To train a model using SDPO, follow the steps below:
+
+1. **Prepare the Dataset**: Ensure your dataset is formatted correctly for preference optimization. Each sample should include chosen and rejected responses.
+
+2. **Configure SDPO**: Set up the configuration with the desired parameters.
+
 ```python
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from datasets import Dataset
-from trl import DPOTrainer, DPOConfig
+from trl import DPOConfig, DPOTrainer
 
-# Load model and tokenizer
-model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
-tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
+config = DPOConfig(
+    output_dir="./sdpo_output",
+    loss_type="sdpo",
+    sdpo_threshold=0.6,  # Keep top 40% of important tokens
+    ref_model_name_or_path="./models/model_33b-dpo-baseline",  # Reference model path
+    per_device_train_batch_size=4,
+    learning_rate=1e-6,
+    num_train_epochs=3,
+)
 
-# Prepare your preference dataset
-train_dataset = Dataset.from_list([
-    {
-        "prompt": "What is the capital of France?",
-        "chosen": "The capital of France is Paris.",
-        "rejected": "The capital of France is London."
-    },
-    # ... more examples
-])
+# Initialize the trainer
+trainer = DPOTrainer(
+    model=model,
+    args=config,
+    train_dataset=train_dataset,
+    tokenizer=tokenizer,
+)
+
+# Start training
+trainer.train()
+```
+
+3. **Monitor Training**: Use the provided metrics to evaluate the training process, such as rewards for chosen and rejected responses.
+
+4. **Evaluate the Model**: After training, test the model on a validation dataset to ensure alignment and preference optimization.
+
+For a detailed walkthrough, refer to the `train_S-DPO.ipynb` notebook in the repository.
+
+
 
 # Configure SDPO with reference model
 config = DPOConfig(
@@ -104,7 +124,7 @@ config = DPOConfig(
     loss_type="sdpo",
     sdpo_threshold=0.6,
     # Option 1: Use a larger model as reference
-    ref_model_name_or_path="microsoft/DialoGPT-large",  # or path to larger model
+    ref_model_name_or_path="./models/model_33b-dpo-baseline",  # or path to larger model
     # Option 2: Use a DPO-aligned model of same size
     # ref_model_name_or_path="/path/to/dpo_aligned_model",
     # Option 3: Use None for standard DPO behavior (policy model as reference)
@@ -139,7 +159,7 @@ trainer.train()
   - **Purpose**: Specifies the reference model for computing importance scores
   - **Options**:
     - Path to local model directory: `"/path/to/reference/model"`
-    - HuggingFace model identifier: `"microsoft/DialoGPT-large"`
+    - HuggingFace model identifier: `"./models/model_33b-dpo-baseline"`
     - `None`: Use the policy model as reference (standard DPO behavior)
   - **Recommendations**: See [Reference Model Selection](#reference-model-selection) below
 
@@ -206,7 +226,7 @@ Start with 0.6 and adjust based on your specific task and dataset characteristic
 
 1. **For Research/Maximum Performance**:
    ```python
-   ref_model_name_or_path="microsoft/DialoGPT-large"  # Use larger model
+   ref_model_name_or_path="./models/model_33b-dpo-baseline"  # Use larger model
    ```
 
 2. **For Production/Efficiency**:
