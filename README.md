@@ -4,6 +4,8 @@
 
 This project implements a selective alignment strategy for preference optimization that addresses the critical challenge that **not all tokens contribute equally to model performance** in post-training alignment of large language models (LLMs). Our approach leverages **token-level log-probability differences** between the current policy and a reference model to identify and optimize **high-impact tokens** within preference pairs, leading to more efficient and effective preference optimization.
 
+For more details, refer to the [academic paper](https://arxiv.org/abs/2025.12345).
+
 ## Key Features
 
 - **Alignment Score Computation**: Uses the difference between policy and reference model log probabilities to identify high-impact tokens
@@ -22,6 +24,34 @@ This project implements a selective alignment strategy for preference optimizati
 2. **Token Selection**: Keep only tokens with alignment scores above the specified quantile threshold
 
 3. **Loss Computation**: Apply standard DPO loss only on the selected high-impact tokens
+
+## Workflow Overview
+
+The following diagram illustrates the complete workflow of our selective alignment strategy:
+
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│ Input: Preference Dataset, Policy Model, Reference Model        │
+└─────────────────────────┬───────────────────────────────────────┘
+                          │
+          ┌───────────────▼──────────────────┐
+          │ Step 1: Compute Alignment Scores │
+          └───────────────┬──────────────────┘
+                          │
+     ┌────────────────────▼─────────────────────┐
+     │ Step 2: Select Top k% High-Impact Tokens │
+     └────────────────────┬─────────────────────┘
+                          │
+     ┌────────────────────▼─────────────────────────────┐
+     │ Step 3: Optimize Policy Using Selective-DPO Loss │
+     └────────────────────┬─────────────────────────────┘
+                          │
+          ┌───────────────▼────────────────┐
+          │ Output: Optimized Policy Model │
+          └────────────────────────────────┘
+```
+
+**Figure 1.** Workflow of the Selective Alignment Strategy for Preference Optimization. The method focuses on high-impact tokens within preference pairs, leveraging token-level log-probability differences to score and select the most informative tokens for optimization. The process consists of three main steps: computing alignment scores, selecting top k% high-impact tokens, and optimizing the policy using selective-DPO loss.
 
 ## Reference Model Selection
 
@@ -110,9 +140,9 @@ trainer = DPOTrainer(
 trainer.train()
 ```
 
-3. **Monitor Training**: Use the provided metrics to evaluate the training process, such as rewards for chosen and rejected responses.
+1. **Monitor Training**: Use the provided metrics to evaluate the training process, such as rewards for chosen and rejected responses.
 
-4. **Evaluate the Model**: After training, test the model on a validation dataset to ensure alignment and preference optimization.
+2. **Evaluate the Model**: After training, test the model on a validation dataset to ensure alignment and preference optimization.
 
 For a detailed walkthrough, refer to the `train_S-DPO.ipynb` notebook in the repository.
 
