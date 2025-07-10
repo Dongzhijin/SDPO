@@ -1288,7 +1288,6 @@ class DPOTrainer(Trainer):
                 # [[0, 0, x, x, x, x],  ->  [[x, x, x, x],
                 #  [0, x, x, x, 0, 0]]       [x, x, x, 0]]
                 attention_mask, input_ids, loss_mask = flush_left(attention_mask, input_ids, loss_mask)
-
             # Add logits_to_keep optimization
             if self.use_logits_to_keep:
                 first_compute_index = loss_mask.nonzero(as_tuple=True)[1].min()
