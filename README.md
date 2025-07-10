@@ -236,11 +236,11 @@ The selective alignment strategy implementation required changes to:
 If you use this selective alignment strategy in your research, please cite:
 
 ```bibtex
-@article{selective_alignment2024,
+@article{selective_alignment2025,
   title={Not All Preferences are What You Need for Post-Training: Selective Alignment Strategy for Preference Optimization},
-  author={Your Name},
+  author={Zhijin Dong},
   journal={arXiv preprint},
-  year={2024}
+  year={2025}
 }
 ```
 
