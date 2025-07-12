@@ -4,7 +4,7 @@
 
 This project implements a selective alignment strategy for preference optimization that addresses the critical challenge that **not all tokens contribute equally to model performance** in post-training alignment of large language models (LLMs). Our approach leverages **token-level log-probability differences** between the current policy and a reference model to identify and optimize **high-impact tokens** within preference pairs, leading to more efficient and effective preference optimization.
 
-For more details, refer to the [academic paper](https://arxiv.org/abs/2025.12345).
+For more details, refer to the [academic paper](https://arxiv.org/abs/2507.07725).
 
 ## Key Features
 
@@ -266,11 +266,14 @@ The selective alignment strategy implementation required changes to:
 If you use this selective alignment strategy in your research, please cite:
 
 ```bibtex
-@article{selective_alignment2025,
-  title={Not All Preferences are What You Need for Post-Training: Selective Alignment Strategy for Preference Optimization},
-  author={Zhijin Dong},
-  journal={arXiv preprint},
-  year={2025}
+@misc{dong2025preferencesneedposttrainingselective,
+      title={Not All Preferences are What You Need for Post-Training: Selective Alignment Strategy for Preference Optimization}, 
+      author={Zhijin Dong},
+      year={2025},
+      eprint={2507.07725},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2507.07725}, 
 }
 ```
 
